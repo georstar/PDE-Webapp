@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - PDE Solver{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">Solve PDEs Online</h1>
+                <p class="lead mb-4">
+                    Enter your partial differential equations and get symbolic solutions instantly.
+                    Perfect for students, researchers, and engineers.
+                </p>
+                <a href="{% url 'solve_pde' %}" class="btn btn-light btn-lg">Get Started</a>
+            </div>
+            <div class="col-lg-6">
+                <div class="card bg-white text-dark">
+                    <div class="card-body p-4">
+                        <h5 class="card-title">Quick Example</h5>
+                        <p class="card-text">Heat Equation:</p>
+                        <code>u_t = u_xx</code>
+                        <p class="card-text mt-3">Wave Equation:</p>
+                        <code>u_tt = u_xx</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">📝 Easy Input</h5>
+                    <p class="card-text">Simple form to enter your PDE with boundary and initial conditions.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">⚡ Instant Solutions</h5>
+                    <p class="card-text">Get symbolic solutions powered by SymPy mathematics engine.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">💾 Save & Access</h5>
+                    <p class="card-text">Store your solutions and access them anytime from your history.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row text-center mb-5">
+        <div class="col-md-6">
+            <h3 class="text-primary">{{ total_solutions }}</h3>
+            <p class="text-muted">PDEs Solved</p>
+        </div>
+        <div class="col-md-6">
+            <h3 class="text-primary">3</h3>
+            <p class="text-muted">Common PDE Types Supported</p>
+        </div>
+    </div>
+
+    <!-- Common PDE Types -->
+    <h2 class="mb-4">Common PDE Types</h2>
+    <div class="row mb-5">
+        {% for pde_type, details in common_solutions.items %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">{{ pde_type }}</h5>
+                </div>
+                <div class="card-body">
+                    <p class="small mb-2"><strong>Form:</strong></p>
+                    <div class="equation-display">{{ details.form }}</div>
+                    <p class="small mb-2 mt-3"><strong>General Solution:</strong></p>
+                    <div class="equation-display">{{ details.general_solution }}</div>
+                    <p class="small mt-3"><strong>Example BC:</strong> <code>{{ details.example_bc }}</code></p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Recent Solutions -->
+    {% if recent_solutions %}
+    <h2 class="mb-4">Recent Solutions</h2>
+    <div class="row">
+        {% for solution in recent_solutions %}
+        <div class="col-md-6 mb-4">
+            <div class="solution-box">
+                <h6 class="mb-2">
+                    <a href="{% url 'solution_detail' solution.pk %}" class="text-decoration-none">
+                        {{ solution.equation|truncatewords:10 }}
+                    </a>
+                </h6>
+                <small class="badge badge-method">{{ solution.method_used }}</small>
+                <small class="text-muted d-block mt-2">{{ solution.created_at|date:"M d, Y H:i" }}</small>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Getting Started -->
+    <div class="row mt-5">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">How to Use</h5>
+                </div>
+                <div class="card-body">
+                    <ol>
+                        <li><strong>Enter your PDE:</strong> Use standard notation (u_t, u_xx, etc.)</li>
+                        <li><strong>Add conditions:</strong> Optionally specify boundary and initial conditions</li>
+                        <li><strong>Solve:</strong> Click the solve button to get the solution</li>
+                        <li><strong>View results:</strong> See the solution and method used</li>
+                        <li><strong>Save:</strong> Your solutions are automatically saved for later</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

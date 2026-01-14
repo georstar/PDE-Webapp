@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Solutions - PDE Solver{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="mb-3">Saved Solutions</h1>
+            <p class="text-muted">Browse all previously solved PDEs</p>
+        </div>
+    </div>
+
+    {% if solutions %}
+    <div class="row">
+        {% for solution in solutions %}
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h5 class="card-title text-primary">{{ solution.equation|truncatewords:10 }}</h5>
+                        <span class="badge bg-primary">{{ solution.method_used }}</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong class="small text-muted">PDE:</strong>
+                        <div class="equation-display">{{ solution.equation }}</div>
+                    </div>
+
+                    {% if solution.boundary_conditions %}
+                    <div class="mb-3">
+                        <strong class="small text-muted">Boundary Conditions:</strong>
+                        <div class="equation-display">{{ solution.boundary_conditions }}</div>
+                    </div>
+                    {% endif %}
+
+                    {% if solution.initial_conditions %}
+                    <div class="mb-3">
+                        <strong class="small text-muted">Initial Conditions:</strong>
+                        <div class="equation-display">{{ solution.initial_conditions }}</div>
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <strong class="small text-muted">Solution:</strong>
+                        <div class="equation-display" style="max-height: 150px; overflow-y: auto;">
+                            {{ solution.solution }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">{{ solution.created_at|date:"M d, Y H:i" }}</small>
+                        <a href="{% url 'solution_detail' solution.pk %}" class="btn btn-sm btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">First</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="alert alert-info text-center py-5">
+        <h5 class="mb-3">No solutions yet!</h5>
+        <p class="mb-3">You haven't solved any PDEs yet.</p>
+        <a href="{% url 'solve_pde' %}" class="btn btn-primary">Solve your first PDE</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

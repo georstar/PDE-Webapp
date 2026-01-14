@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Solution Details - PDE Solver{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col">
+            <a href="{% url 'solution_list' %}" class="btn btn-outline-secondary btn-sm">← Back to Solutions</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Partial Differential Equation</h4>
+                </div>
+                <div class="card-body">
+                    <div class="equation-display" style="font-size: 1.1em;">
+                        {{ solution.equation }}
+                    </div>
+                </div>
+            </div>
+
+            {% if solution.boundary_conditions %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Boundary Conditions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="equation-display">
+                        {{ solution.boundary_conditions }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if solution.initial_conditions %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Initial Conditions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="equation-display">
+                        {{ solution.initial_conditions }}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">✓ Solution</h5>
+                </div>
+                <div class="card-body">
+                    <div class="equation-display" style="font-size: 1.05em; min-height: 150px;">
+                        {{ solution.solution }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">📋 Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong class="small text-muted">Method Used:</strong>
+                        <p class="mb-0">{{ solution.method_used }}</p>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <strong class="small text-muted">Created:</strong>
+                        <p class="mb-0">{{ solution.created_at|date:"F d, Y \a\t H:i" }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong class="small text-muted">Last Updated:</strong>
+                        <p class="mb-0">{{ solution.updated_at|date:"F d, Y \a\t H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">🔧 Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'solve_pde' %}" class="btn btn-primary btn-sm w-100 mb-2">Solve Another PDE</a>
+                    <a href="{% url 'solution_list' %}" class="btn btn-secondary btn-sm w-100">View All Solutions</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
